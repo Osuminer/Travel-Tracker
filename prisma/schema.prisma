@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// TripStatus: "PLANNED" | "ONGOING" | "COMPLETED" (SQLite has no native enum support)
+// PlaceCategory: "LOCATION" | "RESTAURANT" | "TOUR" | "ACTIVITY" | "LODGING" | "OTHER"
+
+model Trip {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  status      String    @default("PLANNED")
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  places      Place[]
+  flights     Flight[]
+}
+
+model Place {
+  id        String    @id @default(cuid())
+  tripId    String
+  trip      Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  name      String
+  category  String    @default("LOCATION")
+  lat       Float
+  lng       Float
+  address   String?
+  rating    Int?
+  comment   String?
+  visitDate DateTime?
+  createdAt DateTime  @default(now())
+  photos    Photo[]
+}
+
+model Photo {
+  id       String  @id @default(cuid())
+  placeId  String
+  place    Place   @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  filePath String
+  caption  String?
+}
+
+model Flight {
+  id               String    @id @default(cuid())
+  tripId           String
+  trip             Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  airline          String
+  flightNumber     String?
+  departureAirport String
+  arrivalAirport   String
+  departureTime    DateTime
+  arrivalTime      DateTime?
+  confirmationCode String?
+  seat             String?
+  notes            String?
+}
