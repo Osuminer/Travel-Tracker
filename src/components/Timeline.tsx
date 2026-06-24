@@ -1,3 +1,5 @@
+import { CATEGORY_ICONS } from "@/lib/categories";
+
 interface TimelinePlace {
   id: string;
   name: string;
@@ -21,15 +23,6 @@ interface TimelineEvent {
   sublabel: string;
   icon: string;
 }
-
-const CATEGORY_ICONS: Record<string, string> = {
-  LOCATION: "📍",
-  RESTAURANT: "🍽️",
-  TOUR: "🧭",
-  ACTIVITY: "🎟️",
-  LODGING: "🛏️",
-  OTHER: "•",
-};
 
 interface TimelineProps {
   places: TimelinePlace[];

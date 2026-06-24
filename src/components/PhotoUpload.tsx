@@ -27,8 +27,11 @@ export default function PhotoUpload({ placeId }: { placeId: string }) {
   }
 
   return (
-    <label className="text-sm text-blue-400 cursor-pointer hover:underline">
-      {uploading ? "Uploading..." : "+ Add photo"}
+    <label className="shrink-0 h-20 w-20 flex flex-col items-center justify-center gap-0.5 rounded border border-dashed border-slate-600 text-slate-400 hover:border-blue-400 hover:text-blue-400 cursor-pointer text-xs">
+      <span aria-hidden className="text-lg">
+        {uploading ? "…" : "+"}
+      </span>
+      {uploading ? "Uploading" : "Add photo"}
       <input
         ref={inputRef}
         type="file"

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { TRIP_STATUSES } from "@/lib/types";
+import Select from "./ui/Select";
 
 export default function TripStatusSelect({
   tripId,
@@ -22,16 +23,12 @@ export default function TripStatusSelect({
   }
 
   return (
-    <select
-      value={status}
-      onChange={handleChange}
-      className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-2 py-1 text-sm"
-    >
+    <Select value={status} onChange={handleChange} className="text-sm px-2 py-1">
       {TRIP_STATUSES.map((s) => (
         <option key={s} value={s}>
           {s}
         </option>
       ))}
-    </select>
+    </Select>
   );
 }

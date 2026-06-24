@@ -3,6 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TRIP_STATUSES } from "@/lib/types";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
+import Textarea from "./ui/Textarea";
+import Select from "./ui/Select";
+import Card from "./ui/Card";
 
 export default function TripForm() {
   const router = useRouter();
@@ -45,85 +50,65 @@ export default function TripForm() {
   }
 
   if (!open) {
-    return (
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-500"
-      >
-        + New Trip
-      </button>
-    );
+    return <Button onClick={() => setOpen(true)}>+ New Trip</Button>;
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="border border-slate-700 rounded-lg p-4 flex flex-col gap-3 bg-slate-800 shadow-sm"
-    >
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-lg text-slate-100">New Trip</h3>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="text-slate-400 hover:text-slate-200"
-        >
-          ✕
-        </button>
-      </div>
-      <input
-        required
-        placeholder="Trip name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="border border-slate-600 bg-slate-900 text-slate-100 placeholder-slate-500 rounded px-3 py-2"
-      />
-      <textarea
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="border border-slate-600 bg-slate-900 text-slate-100 placeholder-slate-500 rounded px-3 py-2"
-      />
-      <div className="flex gap-3">
-        <label className="flex flex-col text-sm flex-1 text-slate-300">
-          Start date
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-3 py-2"
-          />
+    <Card className="p-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-lg text-slate-100">New Trip</h3>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => setOpen(false)}
+          >
+            ✕
+          </Button>
+        </div>
+        <Input
+          required
+          placeholder="Trip name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Textarea
+          placeholder="Description (optional)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <div className="flex gap-3">
+          <label className="flex flex-col text-sm flex-1 text-slate-300 gap-1">
+            Start date
+            <Input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </label>
+          <label className="flex flex-col text-sm flex-1 text-slate-300 gap-1">
+            End date
+            <Input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </label>
+        </div>
+        <label className="flex flex-col text-sm text-slate-300 gap-1">
+          Status
+          <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+            {TRIP_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </Select>
         </label>
-        <label className="flex flex-col text-sm flex-1 text-slate-300">
-          End date
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-3 py-2"
-          />
-        </label>
-      </div>
-      <label className="flex flex-col text-sm text-slate-300">
-        Status
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-3 py-2"
-        >
-          {TRIP_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button
-        type="submit"
-        disabled={submitting}
-        className="rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-500 disabled:opacity-50"
-      >
-        {submitting ? "Creating..." : "Create Trip"}
-      </button>
-    </form>
+        <Button type="submit" disabled={submitting}>
+          {submitting ? "Creating..." : "Create Trip"}
+        </Button>
+      </form>
+    </Card>
   );
 }

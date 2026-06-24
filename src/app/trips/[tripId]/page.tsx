@@ -6,7 +6,10 @@ import PlaceCard from "@/components/PlaceCard";
 import FlightForm from "@/components/FlightForm";
 import FlightCard from "@/components/FlightCard";
 import TripStatusSelect from "@/components/TripStatusSelect";
+import TripDeleteButton from "@/components/TripDeleteButton";
 import Timeline from "@/components/Timeline";
+import Card from "@/components/ui/Card";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export const dynamic = "force-dynamic";
 
@@ -50,66 +53,78 @@ export default async function TripPage({
       <header className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-100">{trip.name}</h1>
-          {dateRange && <p className="text-slate-400 mt-1">{dateRange}</p>}
+          {dateRange && (
+            <p className="text-slate-400 mt-1 flex items-center gap-1">
+              <span aria-hidden>📅</span> {dateRange}
+            </p>
+          )}
           {trip.description && (
             <p className="text-slate-400 mt-2 max-w-2xl">{trip.description}</p>
           )}
         </div>
-        <TripStatusSelect tripId={trip.id} status={trip.status} />
+        <div className="flex flex-col items-end gap-2">
+          <TripStatusSelect tripId={trip.id} status={trip.status} />
+          <TripDeleteButton tripId={trip.id} />
+        </div>
       </header>
 
       {(scheduledPlaces.length > 0 || trip.flights.length > 0) && (
         <section>
-          <h2 className="text-xl font-semibold mb-3 text-slate-100">Timeline</h2>
-          <Timeline places={scheduledPlaces} flights={trip.flights} />
+          <SectionHeading icon="📅">Timeline</SectionHeading>
+          <Card className="p-4">
+            <Timeline places={scheduledPlaces} flights={trip.flights} />
+          </Card>
         </section>
       )}
 
       <section>
-        <h2 className="text-xl font-semibold mb-3 text-slate-100">Map & Places</h2>
-        <TripMapSection tripId={trip.id} places={trip.places} />
+        <SectionHeading icon="🗺️">Map & Places</SectionHeading>
+        <Card className="overflow-hidden p-4">
+          <TripMapSection tripId={trip.id} places={trip.places} />
 
-        {scheduledPlaces.length > 0 && (
-          <>
-            <h3 className="text-sm font-semibold text-slate-300 mt-4 mb-2">
-              Scheduled
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {scheduledPlaces.map((place) => (
-                <PlaceCard key={place.id} place={place} />
-              ))}
-            </div>
-          </>
-        )}
+          {scheduledPlaces.length > 0 && (
+            <>
+              <h3 className="text-sm font-semibold text-slate-300 mt-4 mb-2">
+                Scheduled
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {scheduledPlaces.map((place) => (
+                  <PlaceCard key={place.id} place={place} />
+                ))}
+              </div>
+            </>
+          )}
 
-        {unscheduledPlaces.length > 0 && (
-          <>
-            <h3 className="text-sm font-semibold text-slate-300 mt-4 mb-2">
-              Unscheduled
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {unscheduledPlaces.map((place) => (
-                <PlaceCard key={place.id} place={place} />
-              ))}
-            </div>
-          </>
-        )}
+          {unscheduledPlaces.length > 0 && (
+            <>
+              <h3 className="text-sm font-semibold text-slate-300 mt-4 mb-2">
+                Unscheduled
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {unscheduledPlaces.map((place) => (
+                  <PlaceCard key={place.id} place={place} />
+                ))}
+              </div>
+            </>
+          )}
+        </Card>
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-semibold text-slate-100">Flights</h2>
-          <FlightForm tripId={trip.id} />
-        </div>
-        {trip.flights.length === 0 ? (
-          <p className="text-slate-400">No flights added yet.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {trip.flights.map((flight) => (
-              <FlightCard key={flight.id} flight={flight} />
-            ))}
-          </div>
-        )}
+        <SectionHeading icon="✈️" action={<FlightForm tripId={trip.id} />}>
+          Flights
+        </SectionHeading>
+        <Card className="p-4">
+          {trip.flights.length === 0 ? (
+            <p className="text-slate-400">No flights added yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {trip.flights.map((flight) => (
+                <FlightCard key={flight.id} flight={flight} />
+              ))}
+            </div>
+          )}
+        </Card>
       </section>
     </main>
   );

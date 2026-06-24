@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import ConfirmButton from "./ui/ConfirmButton";
+import Card from "./ui/Card";
 
 interface FlightCardProps {
   flight: {
@@ -29,21 +31,23 @@ export default function FlightCard({ flight }: FlightCardProps) {
   const arr = flight.arrivalTime ? new Date(flight.arrivalTime) : null;
 
   return (
-    <div className="border border-slate-700 rounded-lg p-4 bg-slate-800 shadow-sm flex flex-col gap-1">
+    <Card className="p-4 flex flex-col gap-2">
       <div className="flex items-start justify-between">
-        <div className="font-semibold text-slate-100">
+        <div className="font-semibold text-slate-100 flex items-center gap-1.5">
+          <span aria-hidden>✈️</span>
           {flight.airline} {flight.flightNumber && `· ${flight.flightNumber}`}
         </div>
-        <button
-          onClick={handleDelete}
-          className="text-slate-400 hover:text-red-400 text-sm"
-        >
-          Delete
-        </button>
+        <ConfirmButton onConfirm={handleDelete} />
       </div>
-      <div className="text-sm text-slate-300">
-        {flight.departureAirport} → {flight.arrivalAirport}
+
+      <div className="flex items-center gap-2 text-sm text-slate-200 font-medium">
+        <span>{flight.departureAirport}</span>
+        <span aria-hidden className="text-slate-500">
+          →
+        </span>
+        <span>{flight.arrivalAirport}</span>
       </div>
+
       <div className="text-xs text-slate-500">
         Departs {dep.toLocaleString()}
         {arr && ` · Arrives ${arr.toLocaleString()}`}
@@ -58,6 +62,6 @@ export default function FlightCard({ flight }: FlightCardProps) {
       {flight.notes && (
         <p className="text-xs text-slate-500 mt-1">{flight.notes}</p>
       )}
-    </div>
+    </Card>
   );
 }

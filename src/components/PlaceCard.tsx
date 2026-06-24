@@ -5,7 +5,10 @@ import { useState } from "react";
 import Image from "next/image";
 import StarRating from "./StarRating";
 import PhotoUpload from "./PhotoUpload";
+import ConfirmButton from "./ui/ConfirmButton";
+import Card from "./ui/Card";
 import { toDateTimeLocalValue } from "@/lib/datetime";
+import { CATEGORY_ICONS } from "@/lib/categories";
 
 interface Photo {
   id: string;
@@ -74,69 +77,65 @@ export default function PlaceCard({ place }: PlaceCardProps) {
   }
 
   return (
-    <div className="border border-slate-700 rounded-lg p-4 bg-slate-800 shadow-sm flex flex-col gap-2">
+    <Card className="p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h4 className="font-semibold text-slate-100">{place.name}</h4>
-          <span className="text-xs text-slate-400">{place.category}</span>
+          <h4 className="font-semibold text-slate-100 flex items-center gap-1.5">
+            <span aria-hidden>{CATEGORY_ICONS[place.category] ?? "•"}</span>
+            {place.name}
+          </h4>
           {place.address && (
             <p className="text-xs text-slate-500">{place.address}</p>
           )}
         </div>
-        <button
-          onClick={handleDelete}
-          className="text-slate-400 hover:text-red-400 text-sm"
-        >
-          Delete
-        </button>
+        <ConfirmButton onConfirm={handleDelete} />
       </div>
 
-      <StarRating value={place.rating} onChange={handleRatingChange} size="sm" />
-
-      <label className="flex flex-col text-xs text-slate-400 gap-0.5">
-        Visited on
+      <div className="flex items-center justify-between gap-3">
+        <StarRating value={place.rating} onChange={handleRatingChange} size="sm" />
         <input
           type="datetime-local"
           value={visitDate}
           onChange={handleVisitDateChange}
-          className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-2 py-1 text-sm"
+          title="Visited on"
+          className="border border-slate-600 bg-slate-900 text-slate-300 rounded px-2 py-1 text-xs"
         />
-      </label>
+      </div>
 
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        onBlur={handleCommentBlur}
-        placeholder="Add a comment..."
-        className="border border-slate-600 bg-slate-900 text-slate-100 placeholder-slate-500 rounded px-2 py-1 text-sm"
-      />
-      {savingComment && (
-        <span className="text-xs text-slate-500">Saving...</span>
-      )}
+      <div>
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          onBlur={handleCommentBlur}
+          placeholder="Add a comment..."
+          rows={2}
+          className="w-full border border-transparent bg-transparent focus:border-slate-600 focus:bg-slate-900 text-slate-200 placeholder-slate-500 rounded px-2 py-1 text-sm transition-colors resize-none"
+        />
+        {savingComment && (
+          <span className="text-xs text-slate-500">Saving...</span>
+        )}
+      </div>
 
-      {place.photos.length > 0 && (
-        <div className="flex gap-2 flex-wrap">
-          {place.photos.map((photo) => (
-            <div key={photo.id} className="relative group">
-              <Image
-                src={photo.filePath}
-                alt={photo.caption ?? place.name}
-                width={80}
-                height={80}
-                className="rounded object-cover h-20 w-20"
-              />
-              <button
-                onClick={() => handlePhotoDelete(photo.id)}
-                className="absolute top-0 right-0 bg-black/60 text-white text-xs rounded-bl px-1 opacity-0 group-hover:opacity-100"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <PhotoUpload placeId={place.id} />
-    </div>
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {place.photos.map((photo) => (
+          <div key={photo.id} className="relative group shrink-0">
+            <Image
+              src={photo.filePath}
+              alt={photo.caption ?? place.name}
+              width={80}
+              height={80}
+              className="rounded object-cover h-20 w-20"
+            />
+            <button
+              onClick={() => handlePhotoDelete(photo.id)}
+              className="absolute top-0 right-0 bg-black/60 text-white text-xs rounded-bl px-1 opacity-0 group-hover:opacity-100"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+        <PhotoUpload placeId={place.id} />
+      </div>
+    </Card>
   );
 }
