@@ -8,6 +8,8 @@ import FlightCard from "@/components/FlightCard";
 import TripStatusSelect from "@/components/TripStatusSelect";
 import Timeline from "@/components/Timeline";
 
+export const dynamic = "force-dynamic";
+
 export default async function TripPage({
   params,
 }: {

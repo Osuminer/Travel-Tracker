@@ -3,6 +3,8 @@ import GlobalMap from "@/components/GlobalMap";
 import TripCard from "@/components/TripCard";
 import TripForm from "@/components/TripForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const trips = await prisma.trip.findMany({
     include: { places: true, flights: true },
