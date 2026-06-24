@@ -39,9 +39,12 @@ body {
   background: transparent;
 }
 
-/* Leaflet controls render their own light-themed chrome; restyle for the dark theme */
+/* Leaflet controls render their own light-themed chrome; restyle for the dark theme.
+   z-index here also contains Leaflet's internal panes (up to z=700) inside their own
+   stacking context, so the map can't render above the header/modal. */
 .leaflet-container {
   background: #1e293b;
+  z-index: 0;
 }
 
 .leaflet-popup-content-wrapper,

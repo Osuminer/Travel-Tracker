@@ -6,3 +6,14 @@ export function toDateTimeLocalValue(value: string | Date | null): string {
     date.getDate()
   )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
+
+export function formatDateTime(value: string | Date | null): string | null {
+  if (!value) return null;
+  return new Date(value).toLocaleString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
