@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import StarRating from "./StarRating";
 import PhotoUpload from "./PhotoUpload";
+import { toDateTimeLocalValue } from "@/lib/datetime";
 
 interface Photo {
   id: string;
@@ -20,6 +21,7 @@ interface PlaceCardProps {
     address: string | null;
     rating: number | null;
     comment: string | null;
+    visitDate: string | Date | null;
     photos: Photo[];
   };
 }
@@ -28,6 +30,9 @@ export default function PlaceCard({ place }: PlaceCardProps) {
   const router = useRouter();
   const [comment, setComment] = useState(place.comment ?? "");
   const [savingComment, setSavingComment] = useState(false);
+  const [visitDate, setVisitDate] = useState(
+    toDateTimeLocalValue(place.visitDate)
+  );
 
   async function updatePlace(data: Record<string, unknown>) {
     await fetch(`/api/places/${place.id}`, {
@@ -50,6 +55,12 @@ export default function PlaceCard({ place }: PlaceCardProps) {
     } finally {
       setSavingComment(false);
     }
+  }
+
+  async function handleVisitDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setVisitDate(value);
+    await updatePlace({ visitDate: value || null });
   }
 
   async function handleDelete() {
@@ -81,6 +92,16 @@ export default function PlaceCard({ place }: PlaceCardProps) {
       </div>
 
       <StarRating value={place.rating} onChange={handleRatingChange} size="sm" />
+
+      <label className="flex flex-col text-xs text-slate-400 gap-0.5">
+        Visited on
+        <input
+          type="datetime-local"
+          value={visitDate}
+          onChange={handleVisitDateChange}
+          className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-2 py-1 text-sm"
+        />
+      </label>
 
       <textarea
         value={comment}

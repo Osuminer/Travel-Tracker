@@ -29,6 +29,7 @@ export default function PlaceForm({
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const [comment, setComment] = useState("");
+  const [visitDate, setVisitDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<GeocodeResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -75,6 +76,7 @@ export default function PlaceForm({
           lng: effectiveLng,
           address: address || undefined,
           comment: comment || undefined,
+          visitDate: visitDate || undefined,
         }),
       });
       if (res.ok) {
@@ -83,6 +85,7 @@ export default function PlaceForm({
         setLat(null);
         setLng(null);
         setComment("");
+        setVisitDate("");
         setSearchQuery("");
         setOpen(false);
         onClearPending();
@@ -193,6 +196,16 @@ export default function PlaceForm({
           </span>
         )}
       </div>
+
+      <label className="flex flex-col text-sm text-slate-300">
+        Visited on (optional)
+        <input
+          type="datetime-local"
+          value={visitDate}
+          onChange={(e) => setVisitDate(e.target.value)}
+          className="border border-slate-600 bg-slate-900 text-slate-100 rounded px-3 py-2"
+        />
+      </label>
 
       <textarea
         placeholder="Comment (optional)"
