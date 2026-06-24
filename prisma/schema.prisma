@@ -3,11 +3,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// TripStatus: "PLANNED" | "ONGOING" | "COMPLETED" (SQLite has no native enum support)
+// TripStatus: "PLANNED" | "ONGOING" | "COMPLETED"
 // PlaceCategory: "LOCATION" | "RESTAURANT" | "TOUR" | "ACTIVITY" | "LODGING" | "OTHER"
 
 model Trip {
